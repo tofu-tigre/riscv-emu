@@ -3,12 +3,11 @@
 
 int main() {
     uint32_t testProgram[7] = {
-            0x01000093, // addi x1, x0, 16
-            0x00208133, // addi x2, x0, 32
-            0x00000033, // sw x1, 0(x2)
-            0x00000033, // lw x3, 0(x2)
-            0x00000033, // slli x4, x3, 2
-            0xffdff06f, // jal x0 -4
+            0x00a00093, // addi x1, x0, 10
+            0x00110263, // beq x2, x1, end
+            0x00110113, // addi x2 x2 1
+            0xfffff06f, // jal x0, start
+            0xFF,
             0xFF
 
     };

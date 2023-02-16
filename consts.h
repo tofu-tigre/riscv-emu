@@ -6,6 +6,8 @@
 #define RISCV_EMU_CONSTS_H
 
 #include <cstdint>
+#include <stdint.h>
+#include <stddef.h>
 
 enum ALU_Mode {
     ADD,
@@ -45,6 +47,7 @@ enum MemMode {
 };
 namespace Constants {
     const uint32_t BOOT_ADDR = 0x800;
+    const size_t d = 2;
     const size_t DRAM_SIZE = 4000; // 4 Kilobytes
 
     const uint32_t OPCODE_MASK = 0b00000000000000000000000001111111;

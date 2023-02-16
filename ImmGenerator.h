@@ -9,6 +9,8 @@
 #include <cstdint>
 
 class ImmGenerator {
+private:
+    uint32_t getBImm(uint32_t instr);
 public:
     uint32_t generateImm(uint32_t instr);
 };

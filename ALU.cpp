@@ -32,7 +32,6 @@ uint32_t ALU::doOp(ALU_Mode mode, uint32_t a, uint32_t b) {
             }
 
 
-            1000 0000 0000 1111 1111 1111 1111 1100
             result = at + bt;
             break;
 

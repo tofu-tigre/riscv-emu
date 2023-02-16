@@ -15,6 +15,7 @@ CPU::CPU(uint32_t* progAddr) {
     this->dataMem = DRAM();
     this->controller = Controller();
     this->alu = ALU();
+    this->branchComp = BranchComp();
     this->immGenerator = ImmGenerator();
 
     this->instrMem.load(Constants::BOOT_ADDR, progAddr, 7  * sizeof(uint32_t));
@@ -37,7 +38,7 @@ void CPU::tick() {
 
         uint32_t instr = this->fetch();
         // Decode the next instr.
-        std::cout << "Clock: " << this->clock << "\tInstruction address: " << this->pc << "\tCurrent instruction: " << instr << std::endl;
+        std::cout << "Clock: " << this->clock << "\tPC: " << this->pc << "\tCurrent instruction: " << instr << std::endl;
 
         if (instr == 0xFF) {
             // Kill VM.
@@ -61,6 +62,12 @@ void CPU::tick() {
         this->rs1 = (instr & Constants::RS1_MASK) >> Constants::RS1_SHIFT;
         this->rs2 = (instr & Constants::RS2_MASK) >> Constants::RS2_SHIFT;
         this->rd = (instr & Constants::RD_MASK) >> Constants::RD_SHIFT;
+
+        // Feed reg info into branch comp
+        this->branchComp.setBUn(this->controller.getBrUn());
+        bool regEq = this->branchComp.equal(this->registers[rs1], this->registers[rs2]);
+        bool regLt = this->branchComp.lessThan(this->registers[rs1], this->registers[rs2]);
+        this->controller.setBranch(instr, regEq, regLt);
 
         uint32_t alu_a = this->registers[this->rs1];
         uint32_t alu_b = this->registers[this->rs2];

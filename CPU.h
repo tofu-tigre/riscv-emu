@@ -10,6 +10,7 @@
 #include "Controller.h"
 #include "ALU.h"
 #include "ImmGenerator.h"
+#include "BranchComp.h"
 
 
 class CPU {
@@ -22,6 +23,7 @@ private:
     Controller controller;
     ALU alu;
     ImmGenerator immGenerator;
+    BranchComp branchComp;
 
     // Register selects:
     uint8_t regWrite;

@@ -12,6 +12,7 @@ Controller::Controller() {
     this->memRw = MemRW::READ;
     this->memMode = MemMode::BYTE;
     this->pcSel = PCSel::PC_INCR;
+    this->brUn = false;
 }
 
 
@@ -194,6 +195,8 @@ void Controller::setFlags(uint32_t instr) {
             this->invalidOp = false;
             this->pcSel = PCSel::PC_INCR;
 
+            func3 = (instr & Constants::FUNC_3_MASK) >> Constants::FUNC_3_SHIFT;
+
 
             switch (func3) {
                 case 0b000: // LB
@@ -213,6 +216,31 @@ void Controller::setFlags(uint32_t instr) {
 
         case Constants::B_INSTR:
             // Set control flags.
+            this->aluSel = ALU_Mode::ADD;
+            this->wbSel = WBSelect::PC_PLUS_4;
+            this->invalidOp = false;
+            this->regWEn = false;
+            this->aSel = 1;
+            this->bSel = 1;
+
+            func3 = (instr & Constants::FUNC_3_MASK) >> Constants::FUNC_3_SHIFT;
+
+            switch (func3) {
+                case 0b000:
+                case 0b001:
+                case 0b100:
+                    this->brUn = false;
+                    break;
+
+                case 0b101:
+                case 0b110:
+                case 0b111:
+                    this->brUn = true;
+                    break;
+                default:
+                    this->invalidOp = true;
+                    break;
+            }
             break;
 
         case Constants::U_INSTR:
@@ -252,5 +280,55 @@ WBSelect Controller::getWBSel() {
 
 PCSel Controller::getPCSel() {
     return this->pcSel;
+}
+
+void Controller::setBranch(uint32_t instr, bool brEq, bool brLt) {
+    uint32_t func3 = (instr & Constants::FUNC_3_MASK) >> Constants::FUNC_3_SHIFT;
+
+    if ((instr & Constants::OPCODE_MASK) != Constants::B_INSTR) {
+        return;
+    }
+
+    switch (func3) {
+        case 0b000: // beq
+            if (brEq) {
+                this->pcSel = PCSel::ALU_PC_SEL;
+                return;
+            }
+            break;
+
+        case 0b001: // bne
+            if(!brEq) {
+                this->pcSel = PCSel::ALU_PC_SEL;
+                return;
+            }
+            break;
+
+        case 0b100: // blt or bltu
+        case 0b110:
+            if(brLt) {
+                this->pcSel = PCSel::ALU_PC_SEL;
+                return;
+            }
+            break;
+
+        case 0b101: // bge or bgeu
+        case 0b111:
+            if(!brLt) {
+                this->pcSel = PCSel::ALU_PC_SEL;
+                return;
+            }
+            break;
+
+        default:
+            this->invalidOp = true;
+            break;
+    }
+
+    this->pcSel = PCSel::PC_INCR;
+}
+
+bool Controller::getBrUn() {
+    return this->brUn;
 }
 

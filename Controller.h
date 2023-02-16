@@ -22,6 +22,7 @@ private:
     WBSelect wbSel;
     MemMode memMode;
     PCSel pcSel;
+    bool brUn;
 
 
 public:
@@ -36,6 +37,9 @@ public:
     bool getASel();
     bool getBSel();
     bool isInvalid();
+    bool getBrUn();
+    void setBranch(uint32_t instr, bool brEq, bool brLt);
+
 };
 
 
