@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = C$:/Users/jq/CLionProjects/riscv-emu/cmake-build-debug/
+cmake_ninja_workdir = C$:/Users/jq/riscv-emu/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target riscv_emu
 
@@ -49,38 +49,56 @@ cmake_ninja_workdir = C$:/Users/jq/CLionProjects/riscv-emu/cmake-build-debug/
 
 build cmake_object_order_depends_target_riscv_emu: phony || CMakeFiles/riscv_emu.dir
 
-build CMakeFiles/riscv_emu.dir/main.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/CLionProjects/riscv-emu/main.cpp || cmake_object_order_depends_target_riscv_emu
+build CMakeFiles/riscv_emu.dir/main.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/main.cpp || cmake_object_order_depends_target_riscv_emu
   DEP_FILE = CMakeFiles\riscv_emu.dir\main.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
 
-build CMakeFiles/riscv_emu.dir/CPU.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/CLionProjects/riscv-emu/CPU.cpp || cmake_object_order_depends_target_riscv_emu
+build CMakeFiles/riscv_emu.dir/CPU.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/CPU.cpp || cmake_object_order_depends_target_riscv_emu
   DEP_FILE = CMakeFiles\riscv_emu.dir\CPU.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
 
-build CMakeFiles/riscv_emu.dir/DRAM.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/CLionProjects/riscv-emu/DRAM.cpp || cmake_object_order_depends_target_riscv_emu
+build CMakeFiles/riscv_emu.dir/DRAM.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/DRAM.cpp || cmake_object_order_depends_target_riscv_emu
   DEP_FILE = CMakeFiles\riscv_emu.dir\DRAM.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
 
-build CMakeFiles/riscv_emu.dir/Controller.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/CLionProjects/riscv-emu/Controller.cpp || cmake_object_order_depends_target_riscv_emu
+build CMakeFiles/riscv_emu.dir/Controller.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/Controller.cpp || cmake_object_order_depends_target_riscv_emu
   DEP_FILE = CMakeFiles\riscv_emu.dir\Controller.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
 
-build CMakeFiles/riscv_emu.dir/ImmGenerator.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/CLionProjects/riscv-emu/ImmGenerator.cpp || cmake_object_order_depends_target_riscv_emu
+build CMakeFiles/riscv_emu.dir/ImmGenerator.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/ImmGenerator.cpp || cmake_object_order_depends_target_riscv_emu
   DEP_FILE = CMakeFiles\riscv_emu.dir\ImmGenerator.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
 
-build CMakeFiles/riscv_emu.dir/ALU.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/CLionProjects/riscv-emu/ALU.cpp || cmake_object_order_depends_target_riscv_emu
+build CMakeFiles/riscv_emu.dir/ALU.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/ALU.cpp || cmake_object_order_depends_target_riscv_emu
   DEP_FILE = CMakeFiles\riscv_emu.dir\ALU.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\riscv_emu.dir
+  OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
+
+build CMakeFiles/riscv_emu.dir/BranchComp.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/BranchComp.cpp || cmake_object_order_depends_target_riscv_emu
+  DEP_FILE = CMakeFiles\riscv_emu.dir\BranchComp.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\riscv_emu.dir
+  OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
+
+build CMakeFiles/riscv_emu.dir/RegisterArray.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/RegisterArray.cpp || cmake_object_order_depends_target_riscv_emu
+  DEP_FILE = CMakeFiles\riscv_emu.dir\RegisterArray.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\riscv_emu.dir
+  OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
+
+build CMakeFiles/riscv_emu.dir/FlipFlop.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/FlipFlop.cpp || cmake_object_order_depends_target_riscv_emu
+  DEP_FILE = CMakeFiles\riscv_emu.dir\FlipFlop.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
@@ -93,7 +111,7 @@ build CMakeFiles/riscv_emu.dir/ALU.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Us
 #############################################
 # Link the executable riscv_emu.exe
 
-build riscv_emu.exe: CXX_EXECUTABLE_LINKER__riscv_emu_Debug CMakeFiles/riscv_emu.dir/main.cpp.obj CMakeFiles/riscv_emu.dir/CPU.cpp.obj CMakeFiles/riscv_emu.dir/DRAM.cpp.obj CMakeFiles/riscv_emu.dir/Controller.cpp.obj CMakeFiles/riscv_emu.dir/ImmGenerator.cpp.obj CMakeFiles/riscv_emu.dir/ALU.cpp.obj
+build riscv_emu.exe: CXX_EXECUTABLE_LINKER__riscv_emu_Debug CMakeFiles/riscv_emu.dir/main.cpp.obj CMakeFiles/riscv_emu.dir/CPU.cpp.obj CMakeFiles/riscv_emu.dir/DRAM.cpp.obj CMakeFiles/riscv_emu.dir/Controller.cpp.obj CMakeFiles/riscv_emu.dir/ImmGenerator.cpp.obj CMakeFiles/riscv_emu.dir/ALU.cpp.obj CMakeFiles/riscv_emu.dir/BranchComp.cpp.obj CMakeFiles/riscv_emu.dir/RegisterArray.cpp.obj CMakeFiles/riscv_emu.dir/FlipFlop.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
@@ -108,7 +126,7 @@ build riscv_emu.exe: CXX_EXECUTABLE_LINKER__riscv_emu_Debug CMakeFiles/riscv_emu
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\jq\CLionProjects\riscv-emu\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2022.3.2\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D C:\Users\jq\riscv-emu\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2022.3.2\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -119,7 +137,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\jq\CLionProjects\riscv-emu\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2022.3.2\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SC:\Users\jq\CLionProjects\riscv-emu -BC:\Users\jq\CLionProjects\riscv-emu\cmake-build-debug"
+  COMMAND = cmd.exe /C "cd /D C:\Users\jq\riscv-emu\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2022.3.2\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SC:\Users\jq\riscv-emu -BC:\Users\jq\riscv-emu\cmake-build-debug"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -137,7 +155,7 @@ build riscv_emu: phony riscv_emu.exe
 # =============================================================================
 
 #############################################
-# Folder: C:/Users/jq/CLionProjects/riscv-emu/cmake-build-debug
+# Folder: C:/Users/jq/riscv-emu/cmake-build-debug
 
 build all: phony riscv_emu.exe
 
@@ -148,14 +166,14 @@ build all: phony riscv_emu.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/WindowsPaths.cmake C$:/Users/jq/CLionProjects/riscv-emu/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeRCCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/WindowsPaths.cmake C$:/Users/jq/riscv-emu/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeRCCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/WindowsPaths.cmake C$:/Users/jq/CLionProjects/riscv-emu/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeRCCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
+build C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2022.3.2/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/WindowsPaths.cmake C$:/Users/jq/riscv-emu/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeRCCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
 
 
 #############################################

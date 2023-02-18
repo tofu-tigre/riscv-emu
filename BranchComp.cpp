@@ -5,8 +5,11 @@
 #include <cstring>
 #include "BranchComp.h"
 
-bool BranchComp::lessThan(uint32_t a, uint32_t b) {
-    if (this->bUnsigned) {
+riscv_emu::BranchComp::BranchComp() {
+}
+
+bool riscv_emu::BranchComp::lessThan(bool usgn, uint32_t a, uint32_t b) const {
+    if (usgn) {
         return a < b;
     }
 
@@ -18,15 +21,15 @@ bool BranchComp::lessThan(uint32_t a, uint32_t b) {
     return at < bt;
 }
 
-bool BranchComp::equal(uint32_t a, uint32_t b) {
+bool riscv_emu::BranchComp::equal(bool usgn, uint32_t a, uint32_t b) const {
     return a == b;
-
 }
 
-BranchComp::BranchComp() {
-    this->bUnsigned = false;
-}
-
-void BranchComp::setBUn(bool v) {
-    this->bUnsigned = v;
+bool riscv_emu::BranchComp::getComp(BranchCompType type, bool unsignedComp, uint32_t a, uint32_t b) const {
+    switch (type) {
+        case EQUAL:
+            return equal(unsignedComp, a, b);
+        case LESS_THAN:
+            return lessThan(unsignedComp, a, b);
+    }
 }

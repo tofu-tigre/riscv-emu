@@ -9,19 +9,15 @@
 #include <cstdint>
 #include "consts.h"
 
-class ALU {
-private:
-    bool overflow;
-    uint32_t last;
+namespace riscv_emu {
+    class ALU {
+    private:
 
-    int32_t twos(uint32_t val);
+    public:
+        ALU();
+        uint32_t doOp(ALU_Mode mode, uint32_t a, uint32_t b);
+    };
 
-public:
-    ALU();
-    uint32_t doOp(ALU_Mode mode, uint32_t a, uint32_t b);
-    bool isOverflow();
-    uint32_t getLastResult();
-};
-
+}
 
 #endif //RISCV_EMU_ALU_H

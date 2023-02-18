@@ -6,6 +6,7 @@
 #define RISCV_EMU_CONTROLLER_H
 
 
+#include <string>
 #include "consts.h"
 
 
@@ -23,6 +24,8 @@ private:
     MemMode memMode;
     PCSel pcSel;
     bool brUn;
+    Opcode type;
+    ImmType immSel;
 
 
 public:
@@ -30,6 +33,7 @@ public:
     void setFlags(uint32_t instr);
     ALU_Mode getALUMode();
     MemMode getMemMode();
+    ImmType getImmSel();
     WBSelect getWBSel();
     MemRW getMemRW();
     PCSel getPCSel();
@@ -38,6 +42,8 @@ public:
     bool getBSel();
     bool isInvalid();
     bool getBrUn();
+    Opcode getOpcode();
+    std::string getOpcodeString();
     void setBranch(uint32_t instr, bool brEq, bool brLt);
 
 };

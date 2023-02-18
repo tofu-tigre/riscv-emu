@@ -7,31 +7,23 @@
 #include <bitset>
 #include "ALU.h"
 
-ALU::ALU() {
-    this->overflow = false;
-    this->last = 0;
+riscv_emu::ALU::ALU() {
 }
 
-uint32_t ALU::doOp(ALU_Mode mode, uint32_t a, uint32_t b) {
+uint32_t riscv_emu::ALU::doOp(ALU_Mode mode, uint32_t a, uint32_t b) {
     int32_t result;
 
     int32_t at;
     std::memcpy(&at, &a, sizeof(at));
-
     int32_t bt;
     std::memcpy(&bt, &b, sizeof(bt));
 
     switch(mode) {
+        case B:
+            result = bt;
+            break;
         case ADD:
             std::cout << "ALU op: add\n";
-            // Test for overflow
-            if (b > 0 && a > (UINT32_MAX - b)) {
-                this->overflow = true;
-            } else {
-                this->overflow = false;
-            }
-
-
             result = at + bt;
             break;
 
@@ -88,25 +80,8 @@ uint32_t ALU::doOp(ALU_Mode mode, uint32_t a, uint32_t b) {
             result = at & bt;
             break;
     }
-    uint32_t out;
-    std::memcpy(&out, &result, sizeof(out));
-    this->last = out;
-    return out;
+
+    uint32_t output;
+    std::memcpy(&output, &result, sizeof(output));
+    return output;
 }
-
-bool ALU::isOverflow() {
-    return this->overflow;
-}
-
-uint32_t ALU::getLastResult() {
-    return this->last;
-}
-
-int32_t ALU::twos(uint32_t val) {
-    if ((val >> 31) == 0b0) {
-        return (int32_t) val;
-    }
-
-    return 0;
-}
-

@@ -6,7 +6,7 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.24"
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "riscv_emu::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-riscv_emu-Debug-bf18ac354c9e902375f4.json",
+					"jsonFile" : "target-riscv_emu-Debug-085b39d919a15e53cf8a.json",
 					"name" : "riscv_emu",
 					"projectIndex" : 0
 				}
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/jq/riscv-emu/cmake-build-debug",
-		"source" : "/Users/jq/riscv-emu"
+		"build" : "C:/Users/jq/riscv-emu/cmake-build-debug",
+		"source" : "C:/Users/jq/riscv-emu"
 	},
 	"version" : 
 	{

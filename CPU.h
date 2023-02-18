@@ -11,39 +11,51 @@
 #include "ALU.h"
 #include "ImmGenerator.h"
 #include "BranchComp.h"
+#include "RegisterArray.h"
+#include "FlipFlop.h"
+
+namespace riscv_emu {
+    class CPU {
+    private:
+        FlipFlop pc;
+        uint32_t clock;
+        Controller controller;
+        RegisterArray registers;
+        ALU alu;
+        ImmGenerator immGenerator;
+        BranchComp branchComp;
+
+        // Register selects:
+        uint8_t rs1;
+        uint8_t rs2;
+        uint8_t rd;
+        uint32_t imm; // Output of the immediate generator.
+        //uint32_t instr;
+        uint32_t aluOut;
+        uint32_t wbData;
+
+        bool running;
+
+        DRAM instrMem;
+        DRAM dataMem;
+
+        // Pipelines vars
+        FlipFlop fetchInstr, decodeInstr, executeInstr, memInstr, wbInstr;
 
 
-class CPU {
-private:
-    uint32_t pc;
-    uint32_t clock;
-    uint32_t registers[32];
+        void fetch();
+        void decode();
+        void execute();
+        void memory();
+        void writeBack();
+        void run();
+        void tick();
 
-    // Control flags:
-    Controller controller;
-    ALU alu;
-    ImmGenerator immGenerator;
-    BranchComp branchComp;
+    public:
+        CPU();
+        void boot(uint32_t* program, size_t size);
+    };
 
-    // Register selects:
-    uint8_t regWrite;
-    uint8_t rs1;
-    uint8_t rs2;
-    uint8_t rd;
-    uint32_t immOut; // Output of the immediate generator.
-
-
-
-    DRAM instrMem;
-    DRAM dataMem;
-
-    uint32_t fetch();
-    uint32_t getReg(uint8_t reg);
-
-public:
-    CPU(uint32_t* progAddr);
-    void tick();
-};
-
+}
 
 #endif //RISCV_EMU_CPU_H

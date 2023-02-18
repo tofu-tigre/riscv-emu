@@ -13,6 +13,7 @@ Controller::Controller() {
     this->memMode = MemMode::BYTE;
     this->pcSel = PCSel::PC_INCR;
     this->brUn = false;
+    this->type = R_TYPE;
 }
 
 
@@ -41,10 +42,12 @@ void Controller::setFlags(uint32_t instr) {
 
     switch (opcode) {
         case Constants::R_INSTR:
+            this->type = R_TYPE;
             this->aSel = 0;
             this->bSel = 0;
             this->regWEn = true;
             this->wbSel = WBSelect::ALU_SEL;
+            this->memRw = MemRW::READ;
             this->invalidOp = false;
             this->pcSel = PCSel::PC_INCR;
 
@@ -94,6 +97,8 @@ void Controller::setFlags(uint32_t instr) {
         case Constants::I_LOAD_INSTR:
             func3 = (instr & Constants::FUNC_3_MASK) >> Constants::FUNC_3_SHIFT;
             this->aSel = 0;
+            this->immSel = IMM_I_TYPE;
+            this->type = I_TYPE;
             this->bSel = true;
             this->memRw = MemRW::READ;
             this->wbSel = WBSelect::MEM_SEL;
@@ -125,10 +130,13 @@ void Controller::setFlags(uint32_t instr) {
 
         case Constants::I_INSTR:
             // Set control flags.
+            this->type = I_TYPE;
+            this->immSel = IMM_I_TYPE;
             this->aSel = 0;
             this->bSel = 1;
             this->regWEn = true;
             this->wbSel = WBSelect::ALU_SEL;
+            this->memRw = MemRW::READ;
             this->invalidOp = false;
             this->pcSel = PCSel::PC_INCR;
 
@@ -185,8 +193,21 @@ void Controller::setFlags(uint32_t instr) {
             }
             break;
 
+        case Constants::I_JALR_INSTR:
+            this->type = I_TYPE;
+            this->immSel = IMM_I_TYPE;
+            this->aSel = 0;
+            this->bSel = 1;
+            this->regWEn = true;
+            this->memRw = MemRW::READ;
+            this->wbSel = WBSelect::PC_PLUS_4;
+            this->invalidOp = false;
+            this->pcSel = PCSel::ALU_PC_SEL;
+            break;
+
         case Constants::S_INSTR:
-            // Set control flags.
+            this->type = S_TYPE;
+            this->immSel = IMM_S_TYPE;
             this->aSel = 0;
             this->bSel = true;
             this->regWEn = false;
@@ -216,8 +237,11 @@ void Controller::setFlags(uint32_t instr) {
 
         case Constants::B_INSTR:
             // Set control flags.
+            this->immSel = IMM_B_TYPE;
+            this->type = B_TYPE;
             this->aluSel = ALU_Mode::ADD;
             this->wbSel = WBSelect::PC_PLUS_4;
+            this->memRw = MemRW::READ;
             this->invalidOp = false;
             this->regWEn = false;
             this->aSel = 1;
@@ -243,13 +267,36 @@ void Controller::setFlags(uint32_t instr) {
             }
             break;
 
-        case Constants::U_INSTR:
+        case Constants::U_LUI_INSTR:
+            this->immSel = IMM_U_TYPE;
+            this->bSel = true;
+            this->immSel = IMM_U_TYPE;
+            this->pcSel = PC_INCR;
+            this->regWEn = true;
+            this->wbSel = ALU_SEL;
+            this->memRw = READ;
+            this->aluSel = B;
+            break;
+
+        case Constants::U_AUIPC_INSTR:
+            this->immSel = IMM_U_TYPE;
+            this->aSel = true;
+            this->bSel = true;
+            this->immSel = IMM_U_TYPE;
+            this->pcSel = PC_INCR;
+            this->regWEn = true;
+            this->wbSel = ALU_SEL;
+            this->memRw = READ;
+            this->aluSel = ADD;
             break;
 
         case Constants::J_INSTR:
+            this->immSel = IMM_J_TYPE;
+            this->type = J_TYPE;
             this->aluSel = ALU_Mode::ADD;
             this->wbSel = WBSelect::PC_PLUS_4;
             this->invalidOp = false;
+            this->memRw = MemRW::READ;
             this->regWEn = true;
             this->aSel = 1;
             this->bSel = 1;
@@ -260,6 +307,10 @@ void Controller::setFlags(uint32_t instr) {
             this->invalidOp = true;
             break;
     }
+}
+
+Opcode Controller::getOpcode() {
+    return this->type;
 }
 
 bool Controller::isInvalid() {
@@ -330,5 +381,27 @@ void Controller::setBranch(uint32_t instr, bool brEq, bool brLt) {
 
 bool Controller::getBrUn() {
     return this->brUn;
+}
+
+std::string Controller::getOpcodeString() {
+    switch (type){
+
+        case R_TYPE:
+            return "R-TYPE";
+        case I_TYPE:
+            return "I-TYPE";;
+        case S_TYPE:
+            return "S-TYPE";;
+        case B_TYPE:
+            return "B-TYPE";;
+        case J_TYPE:
+            return "J-TYPE";;
+        case U_TYPE:
+            return "U-TYPE";;
+    }
+}
+
+ImmType Controller::getImmSel() {
+    return this->immSel;
 }
 

@@ -3,4 +3,4 @@ project(riscv_emu)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(riscv_emu main.cpp CPU.cpp CPU.h DRAM.cpp DRAM.h consts.h Controller.cpp Controller.h ImmGenerator.cpp ImmGenerator.h ALU.cpp ALU.h BranchComp.cpp BranchComp.h)
+add_executable(riscv_emu main.cpp CPU.cpp CPU.h DRAM.cpp DRAM.h consts.h Controller.cpp Controller.h ImmGenerator.cpp ImmGenerator.h ALU.cpp ALU.h BranchComp.cpp BranchComp.h RegisterArray.cpp RegisterArray.h Tickable.h FlipFlop.cpp FlipFlop.h)

@@ -7,51 +7,69 @@
 #include <iostream>
 #include "DRAM.h"
 
-DRAM::DRAM() {
+riscv_emu::DRAM::DRAM() {
     std::fill_n(this->data, Constants::DRAM_SIZE, 0);
+    this->addr = 0;
+    this->writeData = 0;
+    this->mode = MemMode::WORD;
+    this->rwSel = MemRW::READ;
+    this->output = 0;
 }
 
-uint32_t DRAM::read(size_t addr, MemMode mode) {
+riscv_emu::DRAM::DRAM(MemMode mode, MemRW rw, uint32_t addr, uint32_t write) {
+    std::fill_n(this->data, Constants::DRAM_SIZE, 0);
+    this->mode = mode;
+    this->rwSel = rw;
+    this->addr = addr;
+    this->writeData = write;
+    this->output = 0;
+}
+
+void riscv_emu::DRAM::read() {
     // TODO: Implement invalid addr. error bits.
-    std::cout << "READING FROM ADDR " << addr << std::endl;
     if (addr >= Constants::DRAM_SIZE) {
-        //return 0;
+        error = true;
+        return;
     }
 
     switch (mode) {
         case BYTE:
-            return this->data[addr] & 0x00000011;
+            output = data[addr];
+            break;
         case HALF_WORD:
-            return this->data[addr] & 0x00001111;
+            output = (data[addr + 1] << 8) | data[addr];
+            break;
         case WORD:
-            return this->data[addr];
+            output = (data[addr + 3] << 24) | (data[addr + 2] << 16) | (data[addr + 1] << 8) | data[addr];
+            break;
         case HALF_WORD_UPPER:
-            return this->data[addr] & 0x11110000;
+            output = (data[addr + 3] << 24) | (data[addr + 2] << 16);
+            break;
         case BYTE_UPPER:
-            return this->data[addr] & 0x11000000;
-        default:
-            std::cout << "ERROR\n";
+            output = (data[addr + 3] << 24);
+            break;
     }
 }
 
-void DRAM::write(size_t addr, uint32_t val, MemMode mode) {
-    std::cout << "WRITING " << val << " TO ADDR " << addr << std::endl;
+void riscv_emu::DRAM::write() {
     if (addr >= Constants::DRAM_SIZE) {
-        //return;
+        error = true;
+        return;
     }
 
     switch (mode) {
         case BYTE:
-            this->data[addr] = val & 0x00000011;
+            data[addr] = writeData & 0x000000FF;
             break;
         case HALF_WORD:
-            this->data[addr] = val & 0x00001111;
+            data[addr] = writeData & 0x000000FF;
+            data[addr + 1] = (writeData & 0x0000FF00) >> 8;
             break;
         case WORD:
-            this->data[addr] = val;
-            break;
-        default:
-            std::cout << "ERROR\n";
+            data[addr] = writeData & 0x000000FF;
+            data[addr + 1] = (writeData & 0x0000FF00) >> 8;
+            data[addr + 2] = (writeData & 0x00FF0000) >> 16;
+            data[addr + 3] = (writeData & 0xFF000000) >> 24;
             break;
     }
 }
@@ -62,7 +80,33 @@ void DRAM::write(size_t addr, uint32_t val, MemMode mode) {
  * @param program - pointer to beginning of program.
  * @param size - number of bytes in the program to load.
  */
-void DRAM::load(size_t addr, uint32_t *program, size_t size) {
-    // TODO: Check that memory can store the program.
+void riscv_emu::DRAM::load(size_t addr, uint32_t *program, size_t size) {
+    if (addr + size >= Constants::DRAM_SIZE) {
+        error = true;
+        return;
+    }
+
     std::memcpy(&this->data[addr], program, size);
 }
+
+void riscv_emu::DRAM::tick() {
+    switch (rwSel) {
+        case MemRW::WRITE:
+            write();
+            return;
+        case MemRW::READ:
+            return;
+    }
+
+}
+
+uint32_t riscv_emu::DRAM::getOutput() {
+    switch (rwSel) {
+        case READ:
+            read();
+            return output;
+        case WRITE:
+            return output;
+    }
+}
+
