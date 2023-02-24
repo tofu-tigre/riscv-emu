@@ -8,6 +8,8 @@
 #include "CPU.h"
 #include "consts.h"
 
+#define DEBUG
+
 riscv_emu::CPU::CPU() {
     this->pc1 = FlipFlop();
     this->pc2 = FlipFlop();
@@ -163,7 +165,7 @@ void riscv_emu::CPU::execute() {
          * bubble it. So, we cheat a little.
          */
         pc1.setInput(result);
-#if DEBUG
+#ifdef DEBUG
         std::cout << "Flushing pipeline for jump.\n";
         std::cout << "New PC addr.: " << result << std::endl;
 #endif
@@ -174,7 +176,7 @@ void riscv_emu::CPU::execute() {
         decodeInstr.setInput(Constants::BUBBLE);
         executeInstr.setInput(Constants::BUBBLE);
         pc1.setInput(result);
-#if DEBUG
+#ifdef DEBUG
         std::cout << "Flushing pipeline for branch.\n";
         std::cout << "New PC addr.: " << result << std::endl;
 #endif
@@ -216,7 +218,7 @@ void riscv_emu::CPU::writeBack() {
 
 void riscv_emu::CPU::run() {
     while(this->running) {
-#if DEBUG
+#ifdef DEBUG
         std::cout << "Clock: " << clock << std::endl;
         std::cout << "IF pc: " << pc1.getOutput() << std::endl;
         std::cout << "DC pc: " << pc2.getOutput() << "\tinstr: " << std::hex << decodeInstr.getOutput() << std::endl;
@@ -248,7 +250,7 @@ void riscv_emu::CPU::run() {
 
     // Must finish instructions left in the pipeline.
     for (int i = 0; i < 5; ++i) {
-#if DEBUG
+#ifdef DEBUG
         std::cout << "Clock: " << clock << std::endl;
         std::cout << "IF pc: " << pc1.getOutput() << std::endl;
         std::cout << "DC pc: " << pc2.getOutput() << "\tinstr: " << std::hex << decodeInstr.getOutput() << std::endl;
@@ -266,7 +268,7 @@ void riscv_emu::CPU::run() {
         tick();
     }
 
-#if DEBUG
+#ifdef DEBUG
     std::cout << "\nRegister status:\n";
     for (int i = 0; i < 32; i++) {
         std::cout << "x" << i << ": " << registers.get(i) << std::endl;
@@ -310,7 +312,7 @@ void riscv_emu::CPU::interlock() {
         pc1.setInput(pc1.getOutput());
         pc3.setInput(pc2.getOutput());
         pc2.setInput(pc2.getOutput());
-#if DEBUG
+#ifdef DEBUG
         std::cout << "Inserting bubble...\n";
 #endif
     }
