@@ -4,7 +4,7 @@
 This project is a 5-stage pipelined RISC-V CPU emulator created in the C++ language. It uses the traditional Fetch (IF), Decode (ID), Execute (EX), Memory (MEM), and Writeback (WB) pipeline as taught in *CS 152: Computer Architecture* at UC Berkeley.
 
 ## How to Use
-Simply run the main.cpp file in your chosen IDE and watch your program execute. If you would like to see the instructions move through the CPU, simply define the keyword *DEBUG*. Further instructions are in the main.cpp file.
+Simply run the main.cpp file in your chosen IDE and watch your program execute. If you would like to see the instructions move through the CPU, simply define the keyword *DEBUG* in cpu.cpp. Further instructions are in the main.cpp file.
 
 ## Further Plans
 * Implement IMEM and DMEM caches.
