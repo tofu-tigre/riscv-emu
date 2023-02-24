@@ -23,22 +23,18 @@ uint32_t riscv_emu::ALU::doOp(ALU_Mode mode, uint32_t a, uint32_t b) {
             result = bt;
             break;
         case ADD:
-            std::cout << "ALU op: add\n";
             result = at + bt;
             break;
 
         case SUB:
-            std::cout << "ALU op: sub\n";
             result = at - bt;
             break;
 
         case SLL:
-            std::cout << "ALU op: sll\n";
             result = at << bt;
             break;
 
         case SLT:
-            std::cout << "ALU op: slt\n";
             if (at < bt) {
                 result = 1;
                 break;
@@ -47,7 +43,6 @@ uint32_t riscv_emu::ALU::doOp(ALU_Mode mode, uint32_t a, uint32_t b) {
             break;
 
         case SLTU:
-            std::cout << "ALU op: sltu\n";
             if (a < b) {
                 result = 1;
                 break;
@@ -56,27 +51,22 @@ uint32_t riscv_emu::ALU::doOp(ALU_Mode mode, uint32_t a, uint32_t b) {
             break;
 
         case XOR:
-            std::cout << "ALU op: xor\n";
             result = at ^ bt;
             break;
 
         case SRL:
-            std::cout << "ALU op: srl\n";
             result = at >> bt;
             break;
 
         case SRA:
-            std::cout << "ALU op: sra\n";
             result = at >> bt;
             break;
 
         case OR:
-            std::cout << "ALU op: or\n";
             result = at | bt;
             break;
 
         case AND:
-            std::cout << "ALU op: and\n";
             result = at & bt;
             break;
     }

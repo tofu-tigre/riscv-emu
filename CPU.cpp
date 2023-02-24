@@ -9,12 +9,32 @@
 #include "consts.h"
 
 riscv_emu::CPU::CPU() {
-    this->pc = FlipFlop();
-    pc.setInput(Constants::BOOT_ADDR);
-    pc.tick();
+    this->pc1 = FlipFlop();
+    this->pc2 = FlipFlop();
+    this->pc3 = FlipFlop();
+    this->pc4 = FlipFlop();
+    this->pc5 = FlipFlop();
+
+    this->decodeInstr = FlipFlop();
+    decodeInstr.setInput(Constants::BUBBLE);
+    this->executeInstr = FlipFlop();
+    executeInstr.setInput(Constants::BUBBLE);
+    this->memInstr = FlipFlop();
+    memInstr.setInput(Constants::BUBBLE);
+    this->wbInstr = FlipFlop();
+    wbInstr.setInput(Constants::BUBBLE);
+
+    this->rd1 = FlipFlop();
+    this->rd2 = FlipFlop();
+    this->aluOut = FlipFlop();
+    this->wbData = FlipFlop();
+    this->md1 = FlipFlop();
+    this->md2 = FlipFlop();
+
+
+    pc1.setInput(Constants::BOOT_ADDR);
     this->running = true;
     this->clock = 0;
-    this->aluOut = 0;
 
     this->instrMem = DRAM(MemMode::WORD, MemRW::READ, Constants::BOOT_ADDR, 0);
     this->dataMem = DRAM();
@@ -23,155 +43,275 @@ riscv_emu::CPU::CPU() {
     this->branchComp = BranchComp();
     this->immGenerator = ImmGenerator();
     this->registers = RegisterArray();
-    this->aluOut = 0;
-    this->wbData = 0;
 
-    // Load our test program into the instruction memory.
-
+    tick();
 }
 
 void riscv_emu::CPU::boot(uint32_t *program, size_t size) {
     instrMem.load(Constants::BOOT_ADDR, program, size);
-    tick();
-}
-
-
-void riscv_emu::CPU::tick() {
-    while(this->running) {
-        // FETCH
-        fetch();
-        // Decode the next instr.
-
-        std::cout << "Clock: " << this->clock << "\tPC: " << pc.getOutput() << "\tSP: " << registers.get(2) << "\tCurrent instruction: " << std::hex << instr << std::endl;
-        std::cout.copyfmt(std::ios(NULL));
-
-        if (instr == 0xFF) {
-            // Kill VM.
-            // print what is in registers x0 - x10
-            instr = 0x00000033;
-            running = false;
-        }
-
-        decode();
-
-        if(this->controller.isInvalid()) {
-            std::cout << "ERROR: Invalid opcode.\n";
-            this->running = false;
-            break;
-        }
-
-
-        std::cout << "Opcode: " << controller.getOpcodeString() << std::endl;
-        std::cout << "rs1: x" << (int)rs1 << "\trs2: x" << (int)rs2 << "\trd: x" << (int)rd << std::endl;
-
-        execute();
-        memory();
-        writeBack();
-
-
-        this->clock++;
-        pc.setInput(pc.getOutput() + 4);
-    }
-
-    std::cout << "\nRegister status:\n";
-    for (int i = 0; i < 32; i++) {
-        std::cout << "x" << i << ": " << registers.get(i) << std::endl;
-    }
-
+    run();
 }
 
 void riscv_emu::CPU::fetch() {
     // Fetch the next instr.
-    switch (controller.getPCSel()) {
-        case ALU_PC_SEL:
-            pc.setInput(aluOut);
-            break;
-        case PC_INCR:
-            pc.setInput(pc.getOutput() + 4);
-            break;
-        default:
-            this->running = false;
-            break;
+
+    /*
+     * If we stopped running (either encountered an invalid opcode or
+     * the exit instruction), continue incrementing the pc like
+     * normal but do not fetch more instructions from IMEM, just bubble.
+     */
+    if (!running) {
+        pc1.setInput(pc1.getOutput() + 4);
+        decodeInstr.setInput(Constants::BUBBLE);
+        pc2.setInput(pc1.getOutput());
+        return;
     }
 
-    pc.tick();
-    instrMem.setInput(MemMode::WORD, MemRW::READ, pc.getOutput(), 0);
-    instrMem.tick();
-    fetchInstr.setInput(instrMem.getOutput());
+    pc1.setInput(pc1.getOutput() + 4);
+    instrMem.setInput(MemMode::WORD, MemRW::READ, pc1.getOutput(), 0);
+    decodeInstr.setInput(instrMem.getOutput());
+
+    pc2.setInput(pc1.getOutput());
 }
 
 void riscv_emu::CPU::decode() {
-    // Decode
-    uint32_t instr = instrMem.getOutput();
-    controller.setFlags(instr);
+    // Decode the instruction at the current PC of the Fetch stage.
+    uint32_t instr = decodeInstr.getOutput();
 
-    imm = immGenerator.generateImm(controller.getImmSel(), instr);
-    int32_t at;
-    std::memcpy(&at, &imm, sizeof(at));
-
-    std::cout << "Imm: " << at << std::endl;
-
-    rs1 = (instr & Constants::RS1_MASK) >> Constants::RS1_SHIFT;
-    rs2 = (instr & Constants::RS2_MASK) >> Constants::RS2_SHIFT;
-    rd = (instr & Constants::RD_MASK) >> Constants::RD_SHIFT;
-
-    // Tick the register array
-    // TODO: Temporary fix. Must update with better solution.
-    registers.tick();
-    registers.setInput(rs1, rs2, rd, controller.getRegWEn(), wbData);
-
-    // Feed reg info into branch comp
-    bool unsgn = controller.getBrUn();
-    bool regEq = this->branchComp.equal(unsgn, registers.getRs1Out(), registers.getRs2Out());
-    bool regLt = this->branchComp.lessThan(unsgn, registers.getRs1Out(), registers.getRs2Out());
-    controller.setBranch(instr, regEq, regLt);
-    decodeInstr.setInput(instr);
-}
-
-void riscv_emu::CPU::memory() {
-    uint32_t instr = executeInstr.getOutput();
-    // MEM STAGE
-    dataMem.tick();
-    dataMem.setInput(controller.getMemMode(), controller.getMemRW(), aluOut, registers.getRs2Out());
-    wbInstr.setInput(instr);
-}
-
-void riscv_emu::CPU::writeBack() {
-    uint32_t instr = memInstr.getOutput();
-    switch (this->controller.getWBSel()) {
-        case ALU_SEL:
-            wbData = aluOut;
-            break;
-        case MEM_SEL:
-            wbData = dataMem.getOutput();
-            break;
-        case PC_PLUS_4:
-            wbData = pc.getOutput() + 4;
-            break;
+    // Catch our exit code.
+    if (instr == Constants::EXIT_CODE || !running) {
+        // Kill VM.
+        // print what is in registers x0 - x10
+        instr = Constants::BUBBLE;
+        running = false;
     }
-    registers.setWriteData(wbData);
-    wbInstr.setInput(instr);
+
+    controller.setDecodeFlags(instr);
+
+    // Generate the immediate from the current instruction.
+    uint32_t imm = immGenerator.generateImm(controller.getImmSel(), instr);
+
+    // Select the registers from the instruction bits.
+    uint32_t rs1 = (instr & Constants::RS1_MASK) >> Constants::RS1_SHIFT;
+    uint32_t rs2 = (instr & Constants::RS2_MASK) >> Constants::RS2_SHIFT;
+
+    // Set rs1, rs2, and rd such that register memory outputs their data.
+    registers.setRs1(rs1);
+    registers.setRs2(rs2);
+
+    // Set the inputs of the flip-flops to the execute phase.
+    rd1.setInput(registers.getRs1Out());
+    rd2.setInput(registers.getRs2Out());
+    md1.setInput(registers.getRs2Out());
+    if (controller.getASel()) {
+        rd1.setInput(pc2.getOutput());
+    }
+    if (controller.getBSel()) {
+        rd2.setInput(imm);
+    }
+
+    // Set the input of the instruction flip-flop to the execute phase.
+    executeInstr.setInput(instr);
+    pc3.setInput(pc2.getOutput());
+
+
 }
 
 void riscv_emu::CPU::execute() {
-    uint32_t instr = decodeInstr.getOutput();
+    // Get the instruction from the previous phase.
+    uint32_t instr = executeInstr.getOutput();
 
-    uint32_t alu_a = registers.getRs1Out();
-    uint32_t alu_b = registers.getRs2Out();
+    /*
+     * Branch decision is made in the beginning of the execute phase.
+     * We must select the registers from the register array since
+     * the flip-flops from the previous phase may contain incorrect values.
+     */
+    uint32_t rs1 = (instr & Constants::RS1_MASK) >> Constants::RS1_SHIFT;
+    uint32_t rs2 = (instr & Constants::RS2_MASK) >> Constants::RS2_SHIFT;
 
-    if (this->controller.getASel()) {
-        alu_a = pc.getOutput();
+    bool unsgn = controller.getBrUn();
+    bool regEq = branchComp.equal(unsgn, registers.get(rs1), registers.get(rs2));
+    bool regLt = branchComp.lessThan(unsgn, registers.get(rs1), registers.get(rs2));
+
+    // Set the proper control flags for the execute stage.
+    controller.setBranch(instr, regEq, regLt);
+    controller.setExecuteFlags(instr);
+
+    // Set the flip-flop for the alu out and memory stage.
+    uint32_t result = alu.doOp(controller.getALUMode(), rd1.getOutput(), rd2.getOutput());
+    aluOut.setInput(result);
+    memInstr.setInput(instr);
+    md2.setInput(md1.getOutput());
+    pc4.setInput(pc3.getOutput());
+
+    /*
+     * Check if the current stage's instruction was a JUMP.
+     * We check here instead of in the ID stage in order to use the ALU
+     * output to calculate the jump offset. However, this design incurs
+     * a slight increase in CPI.
+     */
+    if (controller.isJumpInstr(instr)) {
+        decodeInstr.setInput(Constants::BUBBLE);
+        executeInstr.setInput(Constants::BUBBLE);
+
+        /* We change the PC here for a very annoying reason.
+         * Because of the linearity of the emulation, the PC will
+         * select the proper jump address. However, it will have
+         * to wait on a tick. This means the next output will be
+         * the address of the 3rd instruction past the jump. Because
+         * it has no instruction associated with it yet, we cannot just
+         * bubble it. So, we cheat a little.
+         */
+        pc1.setInput(result);
+#if DEBUG
+        std::cout << "Flushing pipeline for jump.\n";
+        std::cout << "New PC addr.: " << result << std::endl;
+#endif
     }
 
-    if (this->controller.getBSel()) { // select the immediate.
-        alu_b = imm;
+    // Check if branch was taken, if so: flush.
+    if (controller.takeBranch(instr)) {
+        decodeInstr.setInput(Constants::BUBBLE);
+        executeInstr.setInput(Constants::BUBBLE);
+        pc1.setInput(result);
+#if DEBUG
+        std::cout << "Flushing pipeline for branch.\n";
+        std::cout << "New PC addr.: " << result << std::endl;
+#endif
     }
-
-    aluOut = alu.doOp(this->controller.getALUMode(), alu_a, alu_b);
-    executeInstr.setInput(instr);
 }
+
+
+void riscv_emu::CPU::memory() {
+    uint32_t instr = memInstr.getOutput();
+    controller.setMemoryFlags(instr);
+    dataMem.setInput(controller.getMemMode(), controller.getMemRW(), aluOut.getOutput(), md2.getOutput());
+
+    switch (controller.getWBSel()) {
+        case ALU_SEL:
+            wbData.setInput(aluOut.getOutput());
+            break;
+        case MEM_SEL:
+            wbData.setInput(dataMem.getOutput());
+            break;
+        case PC_PLUS_4:
+            wbData.setInput(pc4.getOutput() + 4);
+            break;
+    }
+
+    wbInstr.setInput(instr);
+    pc5.setInput(pc4.getOutput());
+}
+
+void riscv_emu::CPU::writeBack() {
+    uint32_t instr = wbInstr.getOutput();
+    controller.setWriteBackFlags(instr);
+    uint32_t rd = (instr & Constants::RD_MASK) >> Constants::RD_SHIFT;
+
+    registers.setWriteEnable(controller.getRegWEn());
+    registers.setWriteData(wbData.getOutput());
+    registers.setRd(rd);
+}
+
 
 void riscv_emu::CPU::run() {
+    while(this->running) {
+#if DEBUG
+        std::cout << "Clock: " << clock << std::endl;
+        std::cout << "IF pc: " << pc1.getOutput() << std::endl;
+        std::cout << "DC pc: " << pc2.getOutput() << "\tinstr: " << std::hex << decodeInstr.getOutput() << std::endl;
+        std::cout << "EX pc: " << pc3.getOutput() << "\tinstr: " << std::hex << executeInstr.getOutput() << std::endl;
+        std::cout << "ME pc: " << pc4.getOutput() << "\tinstr: " << std::hex << memInstr.getOutput() << std::endl;
+        std::cout << "WB pc: " << pc5.getOutput() << "\tinstr: " << std::hex << wbInstr.getOutput() << std::endl;
+#endif
+        fetch();
+        decode();
+        execute();
+        memory();
+        writeBack();
 
+        /*
+         * Interlocking must be checked after all stages have been
+         * processed. This is because interlocking requires information
+         * from the MEM, EX, and WB stage. In a normal physical CPU
+         * all stages execute simultaneously. However, in an emulator,
+         * we only process each stage one after another (although
+         * behavior will appear as if execution occurred simultaneously).
+         * This same requirement applies for all control hazards that
+         * require information from further stages.
+         */
+        interlock();
+
+        this->clock++;
+        tick();
+    }
+
+    // Must finish instructions left in the pipeline.
+    for (int i = 0; i < 5; ++i) {
+#if DEBUG
+        std::cout << "Clock: " << clock << std::endl;
+        std::cout << "IF pc: " << pc1.getOutput() << std::endl;
+        std::cout << "DC pc: " << pc2.getOutput() << "\tinstr: " << std::hex << decodeInstr.getOutput() << std::endl;
+        std::cout << "EX pc: " << pc3.getOutput() << "\tinstr: " << std::hex << executeInstr.getOutput() << std::endl;
+        std::cout << "ME pc: " << pc4.getOutput() << "\tinstr: " << std::hex << memInstr.getOutput() << std::endl;
+        std::cout << "WB pc: " << pc5.getOutput() << "\tinstr: " << std::hex << wbInstr.getOutput() << std::endl;
+#endif
+        fetch();
+        decode();
+        execute();
+        memory();
+        writeBack();
+        interlock();
+        this->clock++;
+        tick();
+    }
+
+#if DEBUG
+    std::cout << "\nRegister status:\n";
+    for (int i = 0; i < 32; i++) {
+        std::cout << "x" << i << ": " << registers.get(i) << std::endl;
+    }
+#endif
 }
 
+
+void riscv_emu::CPU::tick() {
+    pc1.tick();
+    pc2.tick();
+    pc3.tick();
+    pc4.tick();
+    pc5.tick();
+
+    instrMem.tick();
+    dataMem.tick();
+    registers.tick();
+
+    decodeInstr.tick();
+    executeInstr.tick();
+    memInstr.tick();
+    wbInstr.tick();
+
+    rd1.tick();
+    rd2.tick();
+    md1.tick();
+    md2.tick();
+    aluOut.tick();
+    wbData.tick();
+}
+
+
+void riscv_emu::CPU::interlock() {
+    if (controller.doInterlock()) {
+        // Insert bubbles in previous stages.
+        executeInstr.setInput(Constants::BUBBLE);
+        decodeInstr.setInput(decodeInstr.getOutput());
+
+        // Write the current instruction PC back to PC.
+        pc1.setInput(pc1.getOutput());
+        pc3.setInput(pc2.getOutput());
+        pc2.setInput(pc2.getOutput());
+#if DEBUG
+        std::cout << "Inserting bubble...\n";
+#endif
+    }
+}

@@ -10,6 +10,9 @@
 #include "consts.h"
 
 namespace riscv_emu {
+    /**
+     * Represents the branch comparator of a CPU.
+     */
     class BranchComp {
     public:
         BranchComp();

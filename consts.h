@@ -55,15 +55,6 @@ enum ImmType {
     IMM_U_TYPE
 };
 
-enum Opcode {
-    R_TYPE,
-    I_TYPE,
-    S_TYPE,
-    B_TYPE,
-    J_TYPE,
-    U_TYPE
-};
-
 enum BranchCompType {
     EQUAL,
     LESS_THAN
@@ -73,6 +64,8 @@ namespace Constants {
     const uint32_t BOOT_ADDR = 0x800;
     const size_t d = 2;
     const size_t DRAM_SIZE = 0xFFFF + 0x1; // 4 Kilobytes
+    const uint32_t BUBBLE = 0x00000033;
+    const uint32_t EXIT_CODE = 0xff;
 
     const uint32_t OPCODE_MASK = 0b00000000000000000000000001111111;
     const uint32_t R_INSTR =     0b00000000000000000000000000110011;
@@ -127,20 +120,6 @@ namespace Constants {
     const uint32_t J_IMM_11_SHIFT = 20;
     const uint32_t J_IMM_12_TO_19_MASK =0b00000000000011111111000000000000;
     const uint32_t J_IMM_12_TO_19_SHIFT = 12;
-
-
-
-     // for func3
-    const uint32_t ALU_ADD = 0b000;
-    const uint32_t ALU_SUB = 0b000;
-    const uint32_t ALU_SLL = 0b001;
-    const uint32_t ALU_SLT = 0b010;
-    const uint32_t ALU_SLTU = 0b011;
-    const uint32_t ALU_XOR = 0b100;
-    const uint32_t ALU_SRL = 0b101;
-    const uint32_t ALU_SRA = 0b101;
-    const uint32_t ALU_OR = 0b110;
-    const uint32_t ALU_AND = 0b111;
 
 }
 

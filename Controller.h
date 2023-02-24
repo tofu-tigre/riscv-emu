@@ -9,11 +9,16 @@
 #include <string>
 #include "consts.h"
 
-
+/**
+ * Controls each stage of the RISC-V pipeline.
+ * Contains only the control flags that affect the CPU.
+ * The CPU is responsible for actually changing state given the
+ * control flags.
+ */
 class Controller {
 
 private:
-    // Control flags:
+    // Control flags
     bool regWEn;
     bool bSel;
     bool aSel;
@@ -24,28 +29,60 @@ private:
     MemMode memMode;
     PCSel pcSel;
     bool brUn;
-    Opcode type;
+    bool brEq;
+    bool brLt;
     ImmType immSel;
+
+    // Interlocking control flags
+    bool re1, re2;
+    uint32_t rs1, rs2, wsE, wsM, wsWB;
+    bool weE, weM;
+
+    // Jump kill controls
+    bool didFlush;
+
 
 
 public:
     Controller();
-    void setFlags(uint32_t instr);
+
+    /**
+     * Sets the proper control flags for the decode stage.
+     * @param instr - the instruction at the decode stage.
+     */
+    void setDecodeFlags(uint32_t instr);
+
+    /**
+     * Sets the proper control flags for the execute stage.
+     * @param instr - the instruction at the execute stage.
+     */
+    void setExecuteFlags(uint32_t instr);
+
+    /**
+     * Sets the proper control flags for the memory stage.
+     * @param instr - the instruction at the memory stage.
+     */
+    void setMemoryFlags(uint32_t instr);
+
+    /**
+     * Sets the proper control flags for the writeback stage.
+     * @param instr - the instruction at the writeback stage.
+     */
+    void setWriteBackFlags(uint32_t instr);
+
     ALU_Mode getALUMode();
     MemMode getMemMode();
     ImmType getImmSel();
     WBSelect getWBSel();
     MemRW getMemRW();
-    PCSel getPCSel();
     bool getRegWEn();
     bool getASel();
     bool getBSel();
-    bool isInvalid();
     bool getBrUn();
-    Opcode getOpcode();
-    std::string getOpcodeString();
     void setBranch(uint32_t instr, bool brEq, bool brLt);
-
+    bool doInterlock();
+    bool takeBranch(uint32_t instr);
+    bool isJumpInstr(uint32_t instr);
 };
 
 

@@ -15,32 +15,26 @@
 #include "FlipFlop.h"
 
 namespace riscv_emu {
+    /**
+     * A RISC-V CPU. Contains all components in a traditional
+     * 5-stage pipelined CPU.
+     */
     class CPU {
     private:
-        FlipFlop pc;
         uint32_t clock;
-        Controller controller;
-        RegisterArray registers;
         ALU alu;
         ImmGenerator immGenerator;
         BranchComp branchComp;
-
-        // Register selects:
-        uint8_t rs1;
-        uint8_t rs2;
-        uint8_t rd;
-        uint32_t imm; // Output of the immediate generator.
-        //uint32_t instr;
-        uint32_t aluOut;
-        uint32_t wbData;
-
         bool running;
-
+        RegisterArray registers;
         DRAM instrMem;
         DRAM dataMem;
 
         // Pipelines vars
-        FlipFlop fetchInstr, decodeInstr, executeInstr, memInstr, wbInstr;
+        Controller controller;
+        FlipFlop decodeInstr, executeInstr, memInstr, wbInstr;
+        FlipFlop pc1, pc2, pc3, pc4, pc5;
+        FlipFlop rd1, rd2, md1, md2, wbData, aluOut;
 
 
         void fetch();
@@ -50,6 +44,7 @@ namespace riscv_emu {
         void writeBack();
         void run();
         void tick();
+        void interlock();
 
     public:
         CPU();
