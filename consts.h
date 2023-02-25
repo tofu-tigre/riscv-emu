@@ -47,6 +47,13 @@ enum MemMode {
     HALF_WORD_UPPER
 };
 
+enum CacheByteSelect {
+    CACHE_SEL_BYTE,
+    CACHE_SEL_HALF_WORD,
+    CACHE_SEL_WORD,
+    CACHE_SEL_HALF_WORD_UPPER,
+    CACHE_SEL_BYTE_UPPER
+};
 enum ImmType {
     IMM_I_TYPE,
     IMM_S_TYPE,
@@ -61,11 +68,18 @@ enum BranchCompType {
 };
 
 namespace Constants {
-    const uint32_t BOOT_ADDR = 0x800;
+    const uint32_t BOOT_ADDR = 0x400;
+    const uint32_t DATA_ADDR = 0x800;
     const size_t d = 2;
-    const size_t DRAM_SIZE = 0xFFFF + 0x1; // 4 Kilobytes
+    const size_t DRAM_SIZE = 0x1FFFF; // 4 Kilobytes
     const uint32_t BUBBLE = 0x00000033;
     const uint32_t EXIT_CODE = 0xff;
+
+    const uint32_t TAG_MASK =    0b11111111111111111110000000000000;
+    const int TAG_SHIFT = 13;
+    const uint32_t INDEX_MASK =  0b00000000000000000001111111111000;
+    const int INDEX_SHIFT = 3;
+    const uint32_t OFFSET_MASK = 0b00000000000000000000000000000111;
 
     const uint32_t OPCODE_MASK = 0b00000000000000000000000001111111;
     const uint32_t R_INSTR =     0b00000000000000000000000000110011;

@@ -80,13 +80,14 @@ void riscv_emu::DRAM::write() {
  * @param program - pointer to beginning of program.
  * @param size - number of bytes in the program to load.
  */
-void riscv_emu::DRAM::load(size_t addr, uint32_t *program, size_t size) {
-    if (addr + size >= Constants::DRAM_SIZE) {
+void riscv_emu::DRAM::load(size_t instrAddr, size_t dataAddr, uint32_t *program, uint32_t* data, size_t iSize, size_t dSize) {
+    if (instrAddr + iSize >= Constants::DRAM_SIZE) {
         error = true;
         return;
     }
 
-    std::memcpy(&this->data[addr], program, size);
+    std::memcpy(&this->data[instrAddr], program, iSize);
+    std::memcpy(&this->data[dataAddr], data, dSize);
 }
 
 void riscv_emu::DRAM::tick() {
@@ -110,3 +111,37 @@ uint32_t riscv_emu::DRAM::getOutput() {
     }
 }
 
+uint32_t riscv_emu::DRAM::readTemp(MemMode sel, uint32_t addr) {
+    switch (sel) {
+        case BYTE:
+            return data[addr];
+        case HALF_WORD:
+            return (data[addr + 1] << 8) | data[addr];
+        case WORD:
+            return (data[addr + 3] << 24) | (data[addr + 2] << 16) | (data[addr + 1] << 8) | data[addr];
+        case HALF_WORD_UPPER:
+            return (data[addr + 3] << 24) | (data[addr + 2] << 16);
+        case BYTE_UPPER:
+            return (data[addr + 3] << 24);
+    }
+    return 0;
+}
+
+void riscv_emu::DRAM::writeTemp(MemMode sel, uint32_t addr, uint32_t val) {
+    switch (sel) {
+        case BYTE:
+            data[addr] = val & 0x000000FF;
+            break;
+        case HALF_WORD:
+            data[addr] = val & 0x000000FF;
+            data[addr + 1] = (val & 0x0000FF00) >> 8;
+            break;
+        case WORD:
+            data[addr] = val & 0x000000FF;
+            data[addr + 1] = (val & 0x0000FF00) >> 8;
+            data[addr + 2] = (val & 0x00FF0000) >> 16;
+            data[addr + 3] = (val & 0xFF000000) >> 24;
+            break;
+    }
+    return;
+}

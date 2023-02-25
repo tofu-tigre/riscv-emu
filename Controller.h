@@ -25,8 +25,9 @@ private:
     ALU_Mode aluSel;
     bool invalidOp;
     MemRW memRw;
+    bool memEnable;
     WBSelect wbSel;
-    MemMode memMode;
+    CacheByteSelect memMode;
     PCSel pcSel;
     bool brUn;
     bool brEq;
@@ -71,7 +72,7 @@ public:
     void setWriteBackFlags(uint32_t instr);
 
     ALU_Mode getALUMode();
-    MemMode getMemMode();
+    CacheByteSelect getMemMode();
     ImmType getImmSel();
     WBSelect getWBSel();
     MemRW getMemRW();
@@ -83,6 +84,8 @@ public:
     bool doInterlock();
     bool takeBranch(uint32_t instr);
     bool isJumpInstr(uint32_t instr);
+
+    bool getMemEnable();
 };
 
 

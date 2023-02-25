@@ -89,7 +89,13 @@ int main() {
             0xff
     };
 
-    riscv_emu::CPU vm = riscv_emu::CPU();
-    vm.boot(testProgram, 20 * sizeof(uint32_t));
+    uint32_t data[20] = {
+            12, 9, 1, 5, 35, 432, 0, 23,
+            6, 456, 23, 87, 888, 23434, 246,
+            567, 2342345, 76, 8, 100
+    };
+
+    riscv_emu::CPU emu = riscv_emu::CPU();
+    emu.boot(testProgram, data, 20 * sizeof(uint32_t), 20 * sizeof(uint32_t));
     return 0;
 }

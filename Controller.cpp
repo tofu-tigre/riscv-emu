@@ -10,9 +10,10 @@ Controller::Controller() {
     this->aluSel = ALU_Mode::ADD;
     this->regWEn = 0;
     this->memRw = MemRW::READ;
-    this->memMode = MemMode::BYTE;
+    this->memMode = CacheByteSelect::CACHE_SEL_WORD;
     this->pcSel = PCSel::PC_INCR;
     this->brUn = false;
+    memEnable = false;
     rs1 = rs2 = 0;
     re1 = re2 = 0;
     weE = wsE = 0;
@@ -42,7 +43,7 @@ bool Controller::getBSel() {
 }
 
 
-MemMode Controller::getMemMode() {
+CacheByteSelect Controller::getMemMode() {
     return this->memMode;
 }
 
@@ -247,21 +248,22 @@ void Controller::setExecuteFlags(uint32_t instr) {
             pcSel = PCSel::PC_INCR;
             weE = true;
 
+
             switch (func3) {
                 case 0b000: // LB
-                    this->memMode = MemMode::BYTE;
+                    this->memMode = CACHE_SEL_BYTE;
                     break;
                 case 0b001: // LH
-                    this->memMode = MemMode::HALF_WORD;
+                    this->memMode = CACHE_SEL_HALF_WORD;
                     break;
                 case 0b010: // LW
-                    this->memMode = MemMode::WORD;
+                    this->memMode = CACHE_SEL_WORD;
                     break;
                 case 0b100: // LBU
-                    this->memMode = MemMode::BYTE_UPPER;
+                    this->memMode = CACHE_SEL_BYTE_UPPER;
                     break;
                 case 0b101: // LHU
-                    this->memMode = MemMode::HALF_WORD_UPPER;
+                    this->memMode = CACHE_SEL_HALF_WORD_UPPER;
                     break;
                 default:
                     this->invalidOp = true;
@@ -411,12 +413,14 @@ void Controller::setMemoryFlags(uint32_t instr) {
 
     switch (opcode) {
         case Constants::R_INSTR:
+            memEnable = false;
             this->memRw = MemRW::READ;
             this->wbSel = WBSelect::ALU_SEL;
             weM = true;
             break;
 
         case Constants::I_LOAD_INSTR:
+            memEnable = true;
             this->wbSel = WBSelect::MEM_SEL;
             weM = true;
             func3 = (instr & Constants::FUNC_3_MASK) >> Constants::FUNC_3_SHIFT;
@@ -424,19 +428,19 @@ void Controller::setMemoryFlags(uint32_t instr) {
 
             switch (func3) {
                 case 0b000: // LB
-                    this->memMode = MemMode::BYTE;
+                    this->memMode = CACHE_SEL_BYTE;
                     break;
                 case 0b001: // LH
-                    this->memMode = MemMode::HALF_WORD;
+                    this->memMode = CACHE_SEL_HALF_WORD;
                     break;
                 case 0b010: // LW
-                    this->memMode = MemMode::WORD;
+                    this->memMode = CACHE_SEL_WORD;
                     break;
                 case 0b100: // LBU
-                    this->memMode = MemMode::BYTE_UPPER;
+                    this->memMode = CACHE_SEL_BYTE_UPPER;
                     break;
                 case 0b101: // LHU
-                    this->memMode = MemMode::HALF_WORD_UPPER;
+                    this->memMode = CACHE_SEL_HALF_WORD_UPPER;
                     break;
                 default:
                     this->invalidOp = true;
@@ -448,32 +452,40 @@ void Controller::setMemoryFlags(uint32_t instr) {
             weM = true;
             this->wbSel = WBSelect::ALU_SEL;
             this->memRw = MemRW::READ;
+            memEnable = false;
 
             break;
 
         case Constants::I_JALR_INSTR:
             this->wbSel = WBSelect::PC_PLUS_4;
             this->memRw = MemRW::READ;
+            memEnable = false;
             weM = true;
             break;
 
         case Constants::S_INSTR:
             this->memRw = MemRW::WRITE;
+            memEnable = true;
             weM = false;
 
             func3 = (instr & Constants::FUNC_3_MASK) >> Constants::FUNC_3_SHIFT;
             switch (func3) {
                 case 0b000: // LB
-                    this->memMode = MemMode::BYTE;
+                    this->memMode = CACHE_SEL_BYTE;
                     break;
                 case 0b001: // LH
-                    this->memMode = MemMode::HALF_WORD;
+                    this->memMode = CACHE_SEL_HALF_WORD;
                     break;
                 case 0b010: // LW
-                    this->memMode = MemMode::WORD;
+                    this->memMode = CACHE_SEL_WORD;
+                    break;
+                case 0b100: // LBU
+                    this->memMode = CACHE_SEL_BYTE_UPPER;
+                    break;
+                case 0b101: // LHU
+                    this->memMode = CACHE_SEL_HALF_WORD_UPPER;
                     break;
                 default:
-                    this->memMode = MemMode::WORD;
                     this->invalidOp = true;
             }
             break;
@@ -481,11 +493,13 @@ void Controller::setMemoryFlags(uint32_t instr) {
         case Constants::B_INSTR:
             // Set control flags.
             this->memRw = MemRW::READ;
+            memEnable = false;
             weM = false;
             break;
 
         case Constants::U_LUI_INSTR:
             this->memRw = READ;
+            memEnable = false;
             this->wbSel = ALU_SEL;
             weM = true;
             break;
@@ -494,11 +508,13 @@ void Controller::setMemoryFlags(uint32_t instr) {
             weM = true;
             this->memRw = READ;
             this->wbSel = ALU_SEL;
+            memEnable = false;
             break;
 
         case Constants::J_INSTR:
             weM = true;
             this->memRw = MemRW::READ;
+            memEnable = false;
             this->wbSel = WBSelect::PC_PLUS_4;
             break;
 
@@ -656,5 +672,9 @@ bool Controller::isJumpInstr(uint32_t instr) {
         return true;
     }
     return false;
+}
+
+bool Controller::getMemEnable() {
+    return memEnable;
 }
 

@@ -7,8 +7,8 @@
 
 
 #include <cstdint>
-#include "consts.h"
-#include "Tickable.h"
+#include "../consts.h"
+#include "../Tickable.h"
 
 namespace riscv_emu {
     class DRAM : public Tickable {
@@ -27,9 +27,13 @@ namespace riscv_emu {
     public:
         DRAM();
         DRAM(MemMode mode, MemRW rw, uint32_t addr, uint32_t write);
-        void load(size_t addr, uint32_t* program, size_t size);
+        void load(size_t instrAddr, size_t dataAddr, uint32_t *program, uint32_t* data, size_t iSize, size_t dSize);
         uint32_t getOutput();
         void tick() override;
+
+        uint32_t readTemp(MemMode sel, uint32_t addr);
+        void writeTemp(MemMode sel, uint32_t addr, uint32_t val);
+
 
         inline void setAddr(size_t addr) { this->addr = addr; }
         inline void setWriteData(uint32_t data) { writeData = data; }

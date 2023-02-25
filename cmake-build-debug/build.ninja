@@ -61,11 +61,11 @@ build CMakeFiles/riscv_emu.dir/CPU.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Us
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
 
-build CMakeFiles/riscv_emu.dir/DRAM.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/DRAM.cpp || cmake_object_order_depends_target_riscv_emu
-  DEP_FILE = CMakeFiles\riscv_emu.dir\DRAM.cpp.obj.d
+build CMakeFiles/riscv_emu.dir/memory/DRAM.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/memory/DRAM.cpp || cmake_object_order_depends_target_riscv_emu
+  DEP_FILE = CMakeFiles\riscv_emu.dir\memory\DRAM.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
-  OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
+  OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir\memory
 
 build CMakeFiles/riscv_emu.dir/Controller.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/Controller.cpp || cmake_object_order_depends_target_riscv_emu
   DEP_FILE = CMakeFiles\riscv_emu.dir\Controller.cpp.obj.d
@@ -103,6 +103,12 @@ build CMakeFiles/riscv_emu.dir/FlipFlop.cpp.obj: CXX_COMPILER__riscv_emu_Debug C
   OBJECT_DIR = CMakeFiles\riscv_emu.dir
   OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir
 
+build CMakeFiles/riscv_emu.dir/memory/DirectMapCache.cpp.obj: CXX_COMPILER__riscv_emu_Debug C$:/Users/jq/riscv-emu/memory/DirectMapCache.cpp || cmake_object_order_depends_target_riscv_emu
+  DEP_FILE = CMakeFiles\riscv_emu.dir\memory\DirectMapCache.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\riscv_emu.dir
+  OBJECT_FILE_DIR = CMakeFiles\riscv_emu.dir\memory
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target riscv_emu
@@ -111,7 +117,7 @@ build CMakeFiles/riscv_emu.dir/FlipFlop.cpp.obj: CXX_COMPILER__riscv_emu_Debug C
 #############################################
 # Link the executable riscv_emu.exe
 
-build riscv_emu.exe: CXX_EXECUTABLE_LINKER__riscv_emu_Debug CMakeFiles/riscv_emu.dir/main.cpp.obj CMakeFiles/riscv_emu.dir/CPU.cpp.obj CMakeFiles/riscv_emu.dir/DRAM.cpp.obj CMakeFiles/riscv_emu.dir/Controller.cpp.obj CMakeFiles/riscv_emu.dir/ImmGenerator.cpp.obj CMakeFiles/riscv_emu.dir/ALU.cpp.obj CMakeFiles/riscv_emu.dir/BranchComp.cpp.obj CMakeFiles/riscv_emu.dir/RegisterArray.cpp.obj CMakeFiles/riscv_emu.dir/FlipFlop.cpp.obj
+build riscv_emu.exe: CXX_EXECUTABLE_LINKER__riscv_emu_Debug CMakeFiles/riscv_emu.dir/main.cpp.obj CMakeFiles/riscv_emu.dir/CPU.cpp.obj CMakeFiles/riscv_emu.dir/memory/DRAM.cpp.obj CMakeFiles/riscv_emu.dir/Controller.cpp.obj CMakeFiles/riscv_emu.dir/ImmGenerator.cpp.obj CMakeFiles/riscv_emu.dir/ALU.cpp.obj CMakeFiles/riscv_emu.dir/BranchComp.cpp.obj CMakeFiles/riscv_emu.dir/RegisterArray.cpp.obj CMakeFiles/riscv_emu.dir/FlipFlop.cpp.obj CMakeFiles/riscv_emu.dir/memory/DirectMapCache.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\riscv_emu.dir

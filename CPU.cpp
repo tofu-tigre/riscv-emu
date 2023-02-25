@@ -32,14 +32,16 @@ riscv_emu::CPU::CPU() {
     this->wbData = FlipFlop();
     this->md1 = FlipFlop();
     this->md2 = FlipFlop();
+    this->md3 = FlipFlop();
 
 
     pc1.setInput(Constants::BOOT_ADDR);
     this->running = true;
     this->clock = 0;
 
-    this->instrMem = DRAM(MemMode::WORD, MemRW::READ, Constants::BOOT_ADDR, 0);
-    this->dataMem = DRAM();
+    this->dmem = DRAM(MemMode::WORD, MemRW::READ, Constants::BOOT_ADDR, 0);
+    this->instrCache = new DirectMapCache(&dmem);
+    this->dataCache = new DirectMapCache(&dmem);
     this->controller = Controller();
     this->alu = ALU();
     this->branchComp = BranchComp();
@@ -49,8 +51,8 @@ riscv_emu::CPU::CPU() {
     tick();
 }
 
-void riscv_emu::CPU::boot(uint32_t *program, size_t size) {
-    instrMem.load(Constants::BOOT_ADDR, program, size);
+void riscv_emu::CPU::boot(uint32_t *program, uint32_t* data, size_t iSize, size_t dSize) {
+    dmem.load(Constants::BOOT_ADDR, Constants::DATA_ADDR, program, data, iSize, dSize);
     run();
 }
 
@@ -70,8 +72,9 @@ void riscv_emu::CPU::fetch() {
     }
 
     pc1.setInput(pc1.getOutput() + 4);
-    instrMem.setInput(MemMode::WORD, MemRW::READ, pc1.getOutput(), 0);
-    decodeInstr.setInput(instrMem.getOutput());
+    //instrMem.setInput(MemMode::WORD, MemRW::READ, pc1.getOutput(), 0);
+
+    decodeInstr.setInput(instrCache->read(CacheByteSelect::CACHE_SEL_WORD, pc1.getOutput()));
 
     pc2.setInput(pc1.getOutput());
 }
@@ -187,14 +190,25 @@ void riscv_emu::CPU::execute() {
 void riscv_emu::CPU::memory() {
     uint32_t instr = memInstr.getOutput();
     controller.setMemoryFlags(instr);
-    dataMem.setInput(controller.getMemMode(), controller.getMemRW(), aluOut.getOutput(), md2.getOutput());
+    //dataMem.setInput(controller.getMemMode(), controller.getMemRW(), aluOut.getOutput(), md2.getOutput());
+
+    if(controller.getMemEnable()) {
+        switch (controller.getMemRW()) {
+            case READ:
+                break;
+            case WRITE:
+                dataCache->write(controller.getMemMode(), aluOut.getOutput(), md2.getOutput());
+                break;
+        }
+    }
+
 
     switch (controller.getWBSel()) {
         case ALU_SEL:
             wbData.setInput(aluOut.getOutput());
             break;
         case MEM_SEL:
-            wbData.setInput(dataMem.getOutput());
+            wbData.setInput(dataCache->read(controller.getMemMode(), aluOut.getOutput()));
             break;
         case PC_PLUS_4:
             wbData.setInput(pc4.getOutput() + 4);
@@ -225,6 +239,8 @@ void riscv_emu::CPU::run() {
         std::cout << "EX pc: " << pc3.getOutput() << "\tinstr: " << std::hex << executeInstr.getOutput() << std::endl;
         std::cout << "ME pc: " << pc4.getOutput() << "\tinstr: " << std::hex << memInstr.getOutput() << std::endl;
         std::cout << "WB pc: " << pc5.getOutput() << "\tinstr: " << std::hex << wbInstr.getOutput() << std::endl;
+
+
 #endif
         fetch();
         decode();
@@ -284,8 +300,6 @@ void riscv_emu::CPU::tick() {
     pc4.tick();
     pc5.tick();
 
-    instrMem.tick();
-    dataMem.tick();
     registers.tick();
 
     decodeInstr.tick();
@@ -297,6 +311,7 @@ void riscv_emu::CPU::tick() {
     rd2.tick();
     md1.tick();
     md2.tick();
+    md3.tick();
     aluOut.tick();
     wbData.tick();
 }

@@ -6,13 +6,14 @@
 #define RISCV_EMU_CPU_H
 
 #include <cstdint>
-#include "DRAM.h"
+#include "memory/DRAM.h"
 #include "Controller.h"
 #include "ALU.h"
 #include "ImmGenerator.h"
 #include "BranchComp.h"
 #include "RegisterArray.h"
 #include "FlipFlop.h"
+#include "memory/DirectMapCache.h"
 
 namespace riscv_emu {
     /**
@@ -27,14 +28,18 @@ namespace riscv_emu {
         BranchComp branchComp;
         bool running;
         RegisterArray registers;
-        DRAM instrMem;
-        DRAM dataMem;
+        DRAM dmem;
+        DirectMapCache* instrCache;
+        DirectMapCache* dataCache;
 
         // Pipelines vars
         Controller controller;
         FlipFlop decodeInstr, executeInstr, memInstr, wbInstr;
         FlipFlop pc1, pc2, pc3, pc4, pc5;
         FlipFlop rd1, rd2, md1, md2, wbData, aluOut;
+
+        // Dummy flip-flop for cache memory
+        FlipFlop md3;
 
 
         void fetch();
@@ -48,7 +53,7 @@ namespace riscv_emu {
 
     public:
         CPU();
-        void boot(uint32_t* program, size_t size);
+        void boot(uint32_t *program, uint32_t* data, size_t iSize, size_t dSize);
     };
 
 }
